@@ -9,28 +9,22 @@
 #	* 开源地址：https://github.com/yangzeon/onekey/go.sh
 #====================================================
 
-#定义文字颜色
-Green="\033[32m"
-Red="\033[31m"
-GreenBG="\033[42;37m"
-RedBG="\033[41;37m"
-Font="\033[0m"
-
 #START
-echo "${GreenBG} 开始 ${Font}"
+echo "================================开始================================ "
 mkdir /root/.ssh
 cd /root/.ssh
 yum install wget nano -y
-echo "${GreenBG} 正在加载 KEY 请稍后 ... ${Font}"
+echo "================================正在加载 KEY 请稍后 ================================"
 wget https://raw.githubusercontent.com/yangzeon/onekey/master/virmach.pub
 cat virmach.pub >> authorized_keys
 chmod 700 ~/.ssh
 chmod 600 ~/.ssh/authorized_keys
-echo "${GreenBG} 正在更改 ssh 请稍后 ... ${Font}"
+echo "================================正在更改 ssh 请稍后 ================================ "
 cd
 sed -i 's/#PubkeyAuthentication yes/PubkeyAuthentication yes/' /etc/ssh/sshd_config
 sed -i 's/PubkeyAuthentication yes/& \nRSAAuthentication yes/' /etc/ssh/sshd_config
 sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
-echo "${GreenBG} 完成 ... ${Font}"
+echo "================================ 完成 ... ================================"
 /etc/init.d/sshd restart
+service sshd restart
 wget -N --no-check-certificate git.io/c.sh && chmod +x c.sh && bash c.sh
