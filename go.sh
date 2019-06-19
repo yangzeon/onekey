@@ -15,15 +15,17 @@ mkdir /root/.ssh
 cd /root/.ssh
 yum install wget nano -y
 echo "================================正在加载 KEY 请稍后 ================================"
-wget https://raw.githubusercontent.com/yangzeon/onekey/master/virmach.pub
-cat virmach.pub >> authorized_keys
+wget https://raw.githubusercontent.com/yangzeon/onekey/master/10GKVM.pub
+cat 10GKVM.pub >> authorized_keys
 chmod 700 ~/.ssh
 chmod 600 ~/.ssh/authorized_keys
 echo "================================正在更改 ssh 请稍后 ================================ "
 cd
+
+sed -i 's/#RSAAuthentication yes/RSAAuthentication yes/' /etc/ssh/sshd_config
 sed -i 's/#PubkeyAuthentication yes/PubkeyAuthentication yes/' /etc/ssh/sshd_config
-sed -i 's/PubkeyAuthentication yes/& \nRSAAuthentication yes/' /etc/ssh/sshd_config
 sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
+
 echo "================================ 完成 ... ================================"
 /etc/init.d/sshd restart
 service sshd restart
