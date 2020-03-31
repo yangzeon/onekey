@@ -29,4 +29,4 @@ sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_c
 echo "================================ 完成 ... ================================"
 /etc/init.d/sshd restart
 service sshd restart
-wget -N --no-check-certificate git.io/c.sh && chmod +x c.sh && bash c.sh
+wget -N --no-check-certificate https://raw.githubusercontent.com/yangzeon/onekey/master/c.sh && chmod +x c.sh && bash c.sh
