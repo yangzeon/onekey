@@ -37,8 +37,10 @@ service sshd restart
 
 echo "================================ 定时重启 ... ================================"
 
-echo "0 4 * * * root reboot >> /tmp/reboot.txt" >> /etc/crontab
-echo "30 4 10 * * root yum update && apt-get dist-upgrade -y >> /tmp/update.txt" >> /etc/crontab
+echo "0 4 * * * root reboot >> /log/reboot.txt" >> /etc/crontab
+echo "30 4 10 * * root yum update && apt-get dist-upgrade -y >> /log/update.txt" >> /etc/crontab
+crontab /etc/crontab
+crontab -u root -l
 
 echo "================================ 继续 ... ================================"
 wget -N --no-check-certificate https://raw.githubusercontent.com/yangzeon/onekey/master/c.sh && chmod +x c.sh && bash c.sh
