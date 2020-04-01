@@ -16,7 +16,7 @@ echo "================================开始================================ "
 
 mkdir /root/.ssh
 cd /root/.ssh
-yum install wget nano -y
+yum install wget nano ntp -y
 echo "================================正在加载 KEY 请稍后 ================================"
 
 wget https://raw.githubusercontent.com/yangzeon/onekey/master/10GKVM.pub
