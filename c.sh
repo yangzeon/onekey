@@ -646,7 +646,6 @@ echo -e "${OK} ${GreenBG} 正在安装 V2Ray 请稍后 ... ${Font}"
 	getport3=$(cat ${conf_dir}/port3.txt)
 	getv2ray_path=$(cat ${conf_dir}/v2ray_path.txt)
 
-	unzip_password_v=`cat /dev/urandom | head -n 10 | md5sum | head -c 8`
 	rm -rf ${v2ray_conf_dir}
 	mkdir ${v2ray_conf_dir}
 
