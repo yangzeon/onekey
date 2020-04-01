@@ -768,7 +768,6 @@ WantedBy=multi-user.target
 EOF
 
 	v2ray_conf_add
-	win64_v2ray
 	v2ray_information
 	restart_v2ray
 
