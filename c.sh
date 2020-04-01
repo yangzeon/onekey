@@ -81,6 +81,8 @@ if [[ -e ${conf_dir} ]]; then
 	echo -e "${Green} 一键安装 v2ray 翻墙：${Font} bash c.sh -v"
 	echo ""
 	echo -e "${Green} 一键卸载 v2ray：${Font} bash c.sh -unv"
+	echo -e "${Green} 一键卸载 caddy：${Font} bash c.sh -unc"
+	echo -e "${Green} 一键卸载 php+sqlite：${Font} bash c.sh -unp"
 	echo ""
 	echo -e "${Green} 提示：如果在上次执行中由于错误而中断了安装，请先执行 一键卸载 caddy ${Font}"
 	echo ""
@@ -222,6 +224,52 @@ EOF
 	fi
 }
 
+#卸载caddy
+uninstall_caddy(){
+Default_dir
+Default_caddy
+check_system
+
+echo -e "${OK} ${GreenBG} 正在卸载 caddy 请稍后 ... ${Font}"
+systemctl disable caddy >/dev/null 2>&1
+systemctl stop caddy >/dev/null 2>&1
+killall -9 caddy >/dev/null 2>&1
+
+rm -rf /usr/local/bin/caddy >/dev/null 2>&1
+rm -rf ${caddy_conf_dir} >/dev/null 2>&1
+rm -rf /etc/systemd/system/caddy.service >/dev/null 2>&1
+
+rm -rf ${wwwroot} >/dev/null 2>&1
+rm -rf /root/.caddy >/dev/null 2>&1
+rm -rf /root/.gnupg >/dev/null 2>&1
+rm -rf /root/.pki >/dev/null 2>&1
+rm -rf ${conf_dir} >/dev/null 2>&1
+echo -e "${OK} ${GreenBG} 操作已完成 ${Font}"
+}
+
+
+#卸载php和sqlite
+uninstall_php_sqlite(){
+check_system
+
+if [[ "${ID}" == "centos" ]];then
+
+	echo -e "${OK} ${GreenBG} 正在卸载 php+sqlite 请稍后 ... ${Font}"
+	${INS} ${UNS} php70w-cgi php70w-fpm php70w-curl php70w-gd php70w-mbstring php70w-xml php70w-sqlite3 sqlite-devel -y >/dev/null 2>&1
+	${INS} ${UNS} unzip zip -y >/dev/null 2>&1
+	echo -e "${OK} ${GreenBG} 操作已完成 ${Font}"
+
+else
+
+	echo -e "${OK} ${GreenBG} 正在卸载 php+sqlite 请稍后 ... ${Font}"
+	${INS} ${UNS} php7.0-cgi php7.0-fpm php7.0-curl php7.0-gd php7.0-mbstring php7.0-xml php7.0-sqlite3 sqlite3 -y >/dev/null 2>&1
+	${INS} ${UNS} unzip zip -y >/dev/null 2>&1
+	echo -e "${OK} ${GreenBG} 操作已完成 ${Font}"
+
+fi
+}
+
+
 #卸载v2ray
 uninstall_v2ray(){
 Default_dir
@@ -239,6 +287,54 @@ rm -rf /etc/systemd/system/v2ray.service >/dev/null 2>&1
 
 ${INS} ${UNS} bc lsof ntpdate -y >/dev/null 2>&1
 echo -e "${OK} ${GreenBG} 操作已完成 ${Font}"
+}
+
+#卸载apache2
+uninstall_apache2(){
+
+if [[ "${ID}" == "centos" ]];then
+
+	systemctl disable httpd >/dev/null 2>&1
+	systemctl stop httpd >/dev/null 2>&1
+	killall -9 httpd >/dev/null 2>&1
+
+	rm -rf /etc/httpd >/dev/null 2>&1
+	rm -rf /etc/systemd/system/httpd.service >/dev/null 2>&1
+
+	${INS} ${UNS} httpd httpd-tools apr apr-util -y >/dev/null 2>&1
+
+	systemctl disable firewalld >/dev/null 2>&1
+	systemctl stop firewalld >/dev/null 2>&1
+	killall -9 firewalld >/dev/null 2>&1
+
+else
+
+	systemctl disable apache2 >/dev/null 2>&1
+	systemctl stop apache2 >/dev/null 2>&1
+	killall -9 apache2 >/dev/null 2>&1
+
+	rm -rf /etc/apache2 >/dev/null 2>&1
+	rm -rf /etc/systemd/system/apache2.service >/dev/null 2>&1
+
+	${INS} ${UNS} apache2 -y >/dev/null 2>&1
+
+fi
+}
+
+
+#强制清除可能残余的http服务 更新源
+apache_uninstall(){
+	echo -e "${OK} ${GreenBG} 正在强制清理可能残余的http服务 ${Font}"
+
+	uninstall_apache2
+
+	echo -e "${OK} ${GreenBG} 正在更新源 请稍后 ... ${Font}"
+
+	${add_source}
+	judge "系统更新"
+
+	${INS} install ntpdate bc lsof unzip zip -y
+	judge "必要软件 bc lsof unzip 安装"
 }
 
 
@@ -716,6 +812,15 @@ if [[ $# > 0 ]];then
 		;;
 		-v|--v2ray_install)
 		v2ray_install
+		;;
+		-unv|--uninstall_v2ray)
+		uninstall_v2ray
+		;;
+		-unc|--uninstall_caddy)
+		uninstall_caddy
+		;;
+		-unp|--uninstall_php_sqlite)
+		uninstall_php_sqlite
 		;;
 		-unv|--uninstall_v2ray)
 		uninstall_v2ray
