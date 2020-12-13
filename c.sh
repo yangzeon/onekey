@@ -736,7 +736,7 @@ echo -e "${OK} ${GreenBG} 正在安装 V2Ray 请稍后 ... ${Font}"
 	rm -rf ${v2ray_conf_dir}
 	mkdir ${v2ray_conf_dir}
 
-	bash <(curl -L -s https://install.direct/go.sh)
+	bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
 	judge "安装 V2ray"
 
 	touch /etc/systemd/system/v2ray.service
